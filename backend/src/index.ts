@@ -1,12 +1,28 @@
 import dns from 'node:dns';
 import type { Core } from '@strapi/strapi';
 
-// Node 17+ defaults dns.lookup() to "verbatim" order, so if a host (like
-// Supabase's pooler) resolves to both an A and AAAA record, Node may try
-// the IPv6 address first. Render has no outbound IPv6 route, which turns
-// that into an ENETUNREACH on every DB connection attempt. Forcing IPv4
-// first fixes it without touching the connection string.
-dns.setDefaultResultOrder('ipv4first');
+// Render has no outbound IPv6 route. From Render's network, Supabase's
+// pooler hostname resolves to an IPv6-only answer (setDefaultResultOrder
+// alone doesn't help - there's nothing to reorder if only AAAA comes
+// back), so every DB connection attempt fails with ENETUNREACH. `pg`
+// opens its socket with a bare `.connect(port, host)` and no `lookup`
+// override, so the only lever left is Node's *global* dns.lookup() -
+// force it to only ever return IPv4 addresses.
+const originalLookup = dns.lookup;
+(dns as unknown as { lookup: unknown }).lookup = (
+  hostname: string,
+  options: unknown,
+  callback: unknown
+) => {
+  if (typeof options === 'function') {
+    return originalLookup(hostname, { family: 4 }, options as never);
+  }
+  return originalLookup(
+    hostname,
+    { ...(options as object), family: 4 },
+    callback as never
+  );
+};
 
 // The public front office grid reads rooms and bookings without logging in.
 const PUBLIC_ALLOWED = [
