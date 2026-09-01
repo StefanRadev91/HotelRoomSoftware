@@ -46,12 +46,14 @@ export function authedStrapiFetch(
 }
 
 async function strapiFetch<T>(path: string, token?: string | null): Promise<T> {
-  const res = await fetch(`${STRAPI_URL}${path}`, {
+  const url = `${STRAPI_URL}${path}`;
+  const res = await fetch(url, {
     cache: "no-store",
     headers: token ? { Authorization: `Bearer ${token}` } : undefined,
   });
   if (!res.ok) {
-    throw new Error(`Strapi request failed (${res.status}): ${path}`);
+    const body = await res.text().catch(() => "<no body>");
+    throw new Error(`Strapi request failed (${res.status}): ${url}\n${body}`);
   }
   return res.json() as Promise<T>;
 }
