@@ -1,4 +1,10 @@
-export const STRAPI_URL = process.env.STRAPI_URL ?? "http://localhost:1337";
+// Strip any trailing slash - every call below appends a path starting
+// with "/", and a trailing slash on the env var would produce "//api/..."
+// which Strapi's security middleware rejects outright as a "Malicious Path".
+export const STRAPI_URL = (process.env.STRAPI_URL ?? "http://localhost:1337").replace(
+  /\/+$/,
+  ""
+);
 
 export interface Room {
   id: number;
