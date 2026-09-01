@@ -72,16 +72,20 @@ function todayISODate(): string {
 export async function getRoomGrid(token?: string | null): Promise<RoomWithStatus[]> {
   const today = todayISODate();
 
+  const roomsQuery = new URLSearchParams({
+    sort: "number:asc",
+    "pagination[limit]": "100",
+  });
+  const bookingsQuery = new URLSearchParams({
+    populate: "room",
+    "pagination[limit]": "100",
+    "filters[date_from][$lte]": today,
+    "filters[date_to][$gte]": today,
+  });
+
   const [roomsRes, bookingsRes] = await Promise.all([
-    strapiFetch<StrapiListResponse<Room>>(
-      "/api/rooms?sort=number:asc&pagination[limit]=100",
-      token
-    ),
-    strapiFetch<StrapiListResponse<Booking>>(
-      `/api/bookings?populate=room&pagination[limit]=100` +
-        `&filters[date_from][$lte]=${today}&filters[date_to][$gte]=${today}`,
-      token
-    ),
+    strapiFetch<StrapiListResponse<Room>>(`/api/rooms?${roomsQuery}`, token),
+    strapiFetch<StrapiListResponse<Booking>>(`/api/bookings?${bookingsQuery}`, token),
   ]);
 
   const activeBookingByRoomId = new Map<number, Booking>();
