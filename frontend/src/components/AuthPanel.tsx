@@ -66,8 +66,8 @@ export default function AuthPanel({ email }: { email: string | null }) {
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <input
-        type="email"
-        placeholder="Имейл"
+        type="text"
+        placeholder="Потребител или имейл"
         value={identifier}
         onChange={(e) => setIdentifier(e.target.value)}
         required
