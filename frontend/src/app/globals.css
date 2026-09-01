@@ -1,0 +1,57 @@
+:root {
+  --color-parchment: #f4ecdc;
+  --color-parchment-deep: #ead9bd;
+  --color-stone: #ddd0b0;
+  --color-stone-line: #c9b992;
+  --color-ink: #3a3128;
+  --color-ink-soft: #6e6250;
+  --color-wood: #5a4632;
+  --color-wood-deep: #3f3122;
+  --color-free: #5f7d54;
+  --color-free-bg: #e3ead7;
+  --color-free-border: #a9c096;
+  --color-occupied: #9c4a34;
+  --color-occupied-bg: #f1ded0;
+  --color-occupied-border: #d3a082;
+  --shadow-soft: 0 2px 8px rgba(58, 49, 40, 0.14);
+  --shadow-modal: 0 12px 40px rgba(30, 24, 16, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--color-parchment);
+  background-image: radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 255, 255, 0.35),
+      transparent 55%
+    ),
+    radial-gradient(circle at 80% 60%, rgba(90, 70, 50, 0.06), transparent 60%);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading), Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--color-wood-deep);
+}
+
+button {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+}

@@ -1,0 +1,19 @@
+name: Keep Strapi awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Strapi health check
+        if: ${{ vars.STRAPI_URL != '' }}
+        run: curl -fsS "${{ vars.STRAPI_URL }}/_health"
+
+      - name: STRAPI_URL not configured yet
+        if: ${{ vars.STRAPI_URL == '' }}
+        run: |
+          echo "Set the STRAPI_URL repo variable (Settings > Secrets and variables > Actions > Variables) to the Render backend URL to enable the keep-alive ping."

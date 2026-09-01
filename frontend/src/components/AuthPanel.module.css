@@ -1,0 +1,72 @@
+.panel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.email {
+  color: var(--color-ink-soft);
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-wood);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.linkButton:hover {
+  color: var(--color-wood-deep);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.form input {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-stone-line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  width: 190px;
+}
+
+.formActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.formActions button[type="submit"] {
+  background: var(--color-wood);
+  color: var(--color-parchment);
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.formActions button[type="submit"]:hover {
+  background: var(--color-wood-deep);
+}
+
+.formActions button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.error {
+  margin: 0;
+  color: var(--color-occupied);
+  font-size: 0.85rem;
+}

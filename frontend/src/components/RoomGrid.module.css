@@ -1,0 +1,226 @@
+.legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 0 0 1.75rem;
+  padding: 0.9rem 1.25rem;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--color-stone-line);
+  border-radius: 10px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-ink-soft);
+}
+
+.legendCount {
+  margin-left: auto;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.swatch {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 3px;
+  display: inline-block;
+  border: 1px solid transparent;
+}
+
+.swatch.free {
+  background: var(--color-free-bg);
+  border-color: var(--color-free-border);
+}
+
+.swatch.occupied {
+  background: var(--color-occupied-bg);
+  border-color: var(--color-occupied-border);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 0.65rem;
+}
+
+.room {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  font-family: inherit;
+}
+
+.room.free {
+  background: var(--color-free-bg);
+  border-color: var(--color-free-border);
+  color: var(--color-free);
+}
+
+.room.occupied {
+  background: var(--color-occupied-bg);
+  border-color: var(--color-occupied-border);
+  color: var(--color-occupied);
+}
+
+div.room {
+  cursor: default;
+}
+
+button.room {
+  cursor: pointer;
+}
+
+button.room:hover,
+button.room:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(58, 49, 40, 0.22);
+  outline: none;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(38, 30, 20, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 20;
+}
+
+.modal {
+  position: relative;
+  width: min(360px, 100%);
+  background: var(--color-parchment);
+  border: 1px solid var(--color-stone-line);
+  border-radius: 14px;
+  padding: 2rem 1.75rem 1.75rem;
+  box-shadow: var(--shadow-modal);
+}
+
+.modal h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.6rem;
+}
+
+.close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.85rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-ink-soft);
+  cursor: pointer;
+  padding: 0.25rem 0.4rem;
+}
+
+.close:hover {
+  color: var(--color-ink);
+}
+
+.modalPeriod {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0;
+  padding: 0.65rem 0;
+  border-top: 1px solid var(--color-stone-line);
+  color: var(--color-ink-soft);
+}
+
+.modalPeriod strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.bookingForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.bookingForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+}
+
+.bookingForm input,
+.bookingForm textarea {
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--color-stone-line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--color-ink);
+  resize: vertical;
+}
+
+.formError {
+  margin: 0;
+  color: var(--color-occupied);
+  font-size: 0.85rem;
+}
+
+.formButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.primaryButton {
+  background: var(--color-wood);
+  color: var(--color-parchment);
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  background: var(--color-wood-deep);
+}
+
+.primaryButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.dangerButton {
+  background: none;
+  border: 1px solid var(--color-occupied-border);
+  color: var(--color-occupied);
+  border-radius: 6px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.dangerButton:hover {
+  background: var(--color-occupied-bg);
+}
+
+.dangerButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

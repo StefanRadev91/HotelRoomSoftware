@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "bookings",
+  "info": {
+    "singularName": "booking",
+    "pluralName": "bookings",
+    "displayName": "Booking",
+    "description": "A reservation period for a room"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "room": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::room.room",
+      "inversedBy": "bookings"
+    },
+    "date_from": {
+      "type": "date",
+      "required": true
+    },
+    "date_to": {
+      "type": "date",
+      "required": true
+    },
+    "guest_note": {
+      "type": "text"
+    }
+  }
+}
