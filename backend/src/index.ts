@@ -1,4 +1,12 @@
+import dns from 'node:dns';
 import type { Core } from '@strapi/strapi';
+
+// Node 17+ defaults dns.lookup() to "verbatim" order, so if a host (like
+// Supabase's pooler) resolves to both an A and AAAA record, Node may try
+// the IPv6 address first. Render has no outbound IPv6 route, which turns
+// that into an ENETUNREACH on every DB connection attempt. Forcing IPv4
+// first fixes it without touching the connection string.
+dns.setDefaultResultOrder('ipv4first');
 
 // The public front office grid reads rooms and bookings without logging in.
 const PUBLIC_ALLOWED = [
