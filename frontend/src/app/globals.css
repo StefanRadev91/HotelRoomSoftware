@@ -29,14 +29,23 @@ body {
 
 body {
   background: var(--color-parchment);
-  background-image: radial-gradient(
-      circle at 20% 20%,
-      rgba(255, 255, 255, 0.35),
-      transparent 55%
+  background-image: linear-gradient(
+      rgba(244, 236, 220, 0.55),
+      rgba(244, 236, 220, 0.4)
     ),
-    radial-gradient(circle at 80% 60%, rgba(90, 70, 50, 0.06), transparent 60%);
+    url("/monastery-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--color-ink);
   min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
 }
 
 h1,

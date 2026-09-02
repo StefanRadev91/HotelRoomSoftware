@@ -55,10 +55,10 @@ export default function AuthPanel({ email }: { email: string | null }) {
     return (
       <button
         type="button"
-        className={styles.linkButton}
+        className={styles.loginButton}
         onClick={() => setShowForm(true)}
       >
-        Вход за администратори
+        Вход
       </button>
     );
   }

@@ -10,7 +10,8 @@ const heading = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: "Странноприемница — заетост на стаите",
-  description: "Преглед на заетостта на стаите в хотелското крило на манастира",
+  description:
+    "Преглед на заетостта на стаите в хотелското крило на Бачковския манастир „Успение Богородично“",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

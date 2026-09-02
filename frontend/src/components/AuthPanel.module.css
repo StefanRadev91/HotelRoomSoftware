@@ -24,6 +24,25 @@
   color: var(--color-wood-deep);
 }
 
+.loginButton {
+  background: var(--color-wood);
+  color: var(--color-parchment);
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+
+.loginButton:hover {
+  background: var(--color-wood-deep);
+  transform: translateY(-1px);
+}
+
 .form {
   display: flex;
   flex-direction: column;

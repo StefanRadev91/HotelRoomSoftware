@@ -12,7 +12,9 @@ export default async function Home() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div>
-          <p className={styles.eyebrow}>Хотелско крило на манастира</p>
+          <p className={styles.eyebrow}>
+            Хотелско крило на Бачковския манастир „Успение Богородично“
+          </p>
           <h1>Заетост на стаите</h1>
           <p className={styles.subtitle}>
             {session
@@ -23,7 +25,7 @@ export default async function Home() {
         <AuthPanel email={session?.email ?? null} />
       </header>
 
-      <main>
+      <main className={styles.main}>
         <RoomGrid rooms={rooms} isAuthenticated={Boolean(session)} />
       </main>
     </div>
