@@ -33,6 +33,13 @@ export default function RoomGrid({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [selected]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.refresh();
+    }, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [router]);
+
   const occupiedCount = rooms.filter((r) => r.booking).length;
   const close = () => setSelected(null);
   const onSaved = () => {
