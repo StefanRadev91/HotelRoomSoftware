@@ -123,20 +123,21 @@ const ROOM_LAYOUT: { number: string; position: number }[] = [
   { number: '67', position: 20 },
   { number: '64', position: 21 },
   { number: '53', position: 22 },
-  { number: '12', position: 23 },
-  { number: '14Б', position: 24 },
-  { number: '15', position: 25 },
-  { number: '16', position: 26 },
-  { number: '17', position: 27 },
-  { number: '18', position: 28 },
-  { number: '19', position: 29 },
-  { number: '20', position: 30 },
-  { number: '21', position: 31 },
-  { number: '22', position: 32 },
-  { number: '23', position: 33 },
-  { number: '24', position: 34 },
+  { number: '76', position: 23 },
+  { number: '12', position: 24 },
+  { number: '14Б', position: 25 },
+  { number: '15', position: 26 },
+  { number: '16', position: 27 },
+  { number: '17', position: 28 },
+  { number: '18', position: 29 },
+  { number: '19', position: 30 },
+  { number: '20', position: 31 },
+  { number: '21', position: 32 },
+  { number: '22', position: 33 },
+  { number: '23', position: 34 },
+  { number: '24', position: 35 },
 ];
-const ROOM_LAYOUT_VERSION = 1;
+const ROOM_LAYOUT_VERSION = 2;
 
 /**
  * The first deploy seeded 50 placeholder rooms (01-50) since the real
