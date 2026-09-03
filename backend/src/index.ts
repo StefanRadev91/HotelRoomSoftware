@@ -51,7 +51,7 @@ const PUBLIC_DISALLOWED = [
 ];
 
 // Logged-in admin/reception users: read everything, manage bookings.
-// Rooms themselves (the fixed set of 50) are not editable through this role.
+// Rooms themselves (the fixed layout) are not editable through this role.
 const AUTHENTICATED_ALLOWED = [
   'api::room.room.find',
   'api::room.room.findOne',
@@ -96,23 +96,82 @@ async function syncRolePermissions(
   ]);
 }
 
-const ROOM_COUNT = 50;
+// The real room numbering of the guest wing: two buildings sharing some
+// numbers (there's a "14" in each, disambiguated as 14А/14Б), so plain
+// alphabetical order on `number` can't reproduce it - `position` is the
+// explicit display order, matching the layout handed over by the abbess.
+const ROOM_LAYOUT: { number: string; position: number }[] = [
+  { number: '01', position: 1 },
+  { number: '02', position: 2 },
+  { number: '06', position: 3 },
+  { number: '08', position: 4 },
+  { number: '09', position: 5 },
+  { number: '13', position: 6 },
+  { number: '14А', position: 7 },
+  { number: '42', position: 8 },
+  { number: '43', position: 9 },
+  { number: '44', position: 10 },
+  { number: '45', position: 11 },
+  { number: '46', position: 12 },
+  { number: '47', position: 13 },
+  { number: '48', position: 14 },
+  { number: '49', position: 15 },
+  { number: '50', position: 16 },
+  { number: '51', position: 17 },
+  { number: '62', position: 18 },
+  { number: '63', position: 19 },
+  { number: '67', position: 20 },
+  { number: '64', position: 21 },
+  { number: '53', position: 22 },
+  { number: '12', position: 23 },
+  { number: '14Б', position: 24 },
+  { number: '15', position: 25 },
+  { number: '16', position: 26 },
+  { number: '17', position: 27 },
+  { number: '18', position: 28 },
+  { number: '19', position: 29 },
+  { number: '20', position: 30 },
+  { number: '21', position: 31 },
+  { number: '22', position: 32 },
+  { number: '23', position: 33 },
+  { number: '24', position: 34 },
+];
+const ROOM_LAYOUT_VERSION = 1;
 
 /**
- * A brand new database (e.g. the first deploy against a fresh Supabase/Render
- * Postgres instance) has zero rooms. Rather than click-creating 50 rows by
- * hand in the admin panel, seed them once. Guarded by a count check so it's
- * a no-op on every later boot, local or production.
+ * The first deploy seeded 50 placeholder rooms (01-50) since the real
+ * numbering wasn't known yet. This replaces them with the actual room list
+ * above, keyed off a core-store version flag so it runs exactly once and
+ * never fights with rooms added/edited later through the admin panel.
  */
-async function ensureRoomsSeeded(strapi: Core.Strapi) {
-  const existingCount = await strapi.documents('api::room.room').count({});
-  if (existingCount > 0) return;
+async function ensureRoomLayout(strapi: Core.Strapi) {
+  const store = strapi.store({ type: 'type', name: 'room-layout', key: 'version' });
+  const appliedVersion = await store.get({});
+  if (appliedVersion === ROOM_LAYOUT_VERSION) return;
 
-  for (let i = 1; i <= ROOM_COUNT; i++) {
-    await strapi.documents('api::room.room').create({
-      data: { number: String(i).padStart(2, '0') },
-    });
+  const existing = await strapi.query('api::room.room').findMany({});
+  const byNumber = new Map(existing.map((room) => [room.number, room]));
+
+  for (const target of ROOM_LAYOUT) {
+    const current = byNumber.get(target.number);
+    if (current) {
+      await strapi.query('api::room.room').update({
+        where: { id: current.id },
+        data: { position: target.position },
+      });
+      byNumber.delete(target.number);
+    } else {
+      await strapi.query('api::room.room').create({ data: target });
+    }
   }
+
+  // Whatever's left is an old placeholder number that isn't part of the
+  // real layout (e.g. "03", "25", "40") - drop it.
+  for (const stale of byNumber.values()) {
+    await strapi.query('api::room.room').delete({ where: { id: stale.id } });
+  }
+
+  await store.set({ value: ROOM_LAYOUT_VERSION });
 }
 
 export default {
@@ -121,6 +180,6 @@ export default {
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await syncRolePermissions(strapi, 'public', PUBLIC_ALLOWED, PUBLIC_DISALLOWED);
     await syncRolePermissions(strapi, 'authenticated', AUTHENTICATED_ALLOWED);
-    await ensureRoomsSeeded(strapi);
+    await ensureRoomLayout(strapi);
   },
 };

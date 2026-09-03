@@ -79,7 +79,7 @@ export async function getRoomGrid(token?: string | null): Promise<RoomWithStatus
   const today = todayISODate();
 
   const roomsQuery = new URLSearchParams({
-    sort: "number:asc",
+    sort: "position:asc",
     "pagination[limit]": "100",
   });
   const bookingsQuery = new URLSearchParams({

@@ -497,6 +497,7 @@ export interface ApiRoomRoom extends Struct.CollectionTypeSchema {
     number: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    position: Schema.Attribute.Integer & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

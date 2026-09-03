@@ -17,6 +17,10 @@
       "required": true,
       "unique": true
     },
+    "position": {
+      "type": "integer",
+      "required": true
+    },
     "bookings": {
       "type": "relation",
       "relation": "oneToMany",
