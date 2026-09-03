@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { RoomWithStatus } from "@/lib/strapi";
+import type { Booking, RoomWithStatus } from "@/lib/strapi";
 import styles from "./RoomGrid.module.css";
 
 function formatDate(isoDate: string): string {
@@ -17,9 +17,13 @@ function formatDate(isoDate: string): string {
 export default function RoomGrid({
   rooms,
   isAuthenticated,
+  viewedDate,
+  today,
 }: {
   rooms: RoomWithStatus[];
   isAuthenticated: boolean;
+  viewedDate: string;
+  today: string;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState<RoomWithStatus | null>(null);
@@ -59,7 +63,8 @@ export default function RoomGrid({
           Заета
         </span>
         <span className={styles.legendCount}>
-          {occupiedCount} от {rooms.length} стаи са заети днес
+          {occupiedCount} от {rooms.length} стаи са заети{" "}
+          {viewedDate === today ? "днес" : `на ${formatDate(viewedDate)}`}
         </span>
       </div>
 
@@ -118,7 +123,14 @@ export default function RoomGrid({
             <h2 id="booking-modal-title">Стая {selected.room.number}</h2>
 
             {isAuthenticated ? (
-              <BookingForm roomWithStatus={selected} onSaved={onSaved} />
+              <>
+                <BookingForm
+                  roomWithStatus={selected}
+                  defaultDate={viewedDate}
+                  onSaved={onSaved}
+                />
+                <RoomHistory roomDocumentId={selected.room.documentId} />
+              </>
             ) : selected.booking ? (
               <>
                 <p className={styles.modalPeriod}>
@@ -140,12 +152,14 @@ export default function RoomGrid({
 
 function BookingForm({
   roomWithStatus: { room, booking },
+  defaultDate,
   onSaved,
 }: {
   roomWithStatus: RoomWithStatus;
+  defaultDate: string;
   onSaved: () => void;
 }) {
-  const [dateFrom, setDateFrom] = useState(booking?.date_from ?? "");
+  const [dateFrom, setDateFrom] = useState(booking?.date_from ?? defaultDate);
   const [dateTo, setDateTo] = useState(booking?.date_to ?? "");
   const [guestNote, setGuestNote] = useState(booking?.guest_note ?? "");
   const [error, setError] = useState<string | null>(null);
@@ -251,5 +265,56 @@ function BookingForm({
         )}
       </div>
     </form>
+  );
+}
+
+function RoomHistory({ roomDocumentId }: { roomDocumentId: string }) {
+  const [entries, setEntries] = useState<Booking[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setEntries(null);
+    setError(null);
+    fetch(`/api/bookings/history?room=${roomDocumentId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data.error) {
+          setError(data.error);
+          return;
+        }
+        setEntries(data.data ?? []);
+      })
+      .catch(() => {
+        if (!cancelled) setError("Неуспешно зареждане на историята.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [roomDocumentId]);
+
+  if (error) return <p className={styles.formError}>{error}</p>;
+  if (!entries || entries.length === 0) return null;
+
+  return (
+    <div className={styles.history}>
+      <h3>История</h3>
+      <ul>
+        {entries.map((entry) => (
+          <li key={entry.id} className={styles.historyEntry}>
+            <span className={styles.historyDates}>
+              {formatDate(entry.date_from)} – {formatDate(entry.date_to)}
+              {entry.status === "cancelled" && (
+                <span className={styles.historyCancelled}> (отказана)</span>
+              )}
+            </span>
+            {entry.guest_note && (
+              <span className={styles.historyNote}>{entry.guest_note}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

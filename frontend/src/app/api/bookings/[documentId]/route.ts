@@ -28,6 +28,10 @@ export async function PUT(
   return NextResponse.json(data);
 }
 
+/**
+ * "Cancel" soft-deletes: the booking is kept with status "cancelled" so it
+ * still shows up in the room's history, instead of being erased outright.
+ */
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ documentId: string }> }
@@ -39,7 +43,8 @@ export async function DELETE(
 
   const { documentId } = await params;
   const res = await authedStrapiFetch(`/api/bookings/${documentId}`, token, {
-    method: "DELETE",
+    method: "PUT",
+    body: JSON.stringify({ data: { status: "cancelled" } }),
   });
 
   if (!res.ok) {

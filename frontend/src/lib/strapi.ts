@@ -18,6 +18,7 @@ export interface Booking {
   date_from: string;
   date_to: string;
   guest_note: string | null;
+  status: "active" | "cancelled";
   room: Room | null;
 }
 
@@ -64,19 +65,25 @@ async function strapiFetch<T>(path: string, token?: string | null): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-function todayISODate(): string {
+export function todayISODate(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
 /**
  * Rooms are read-only in the public grid; "status" is never stored, it's
- * derived by checking which booking (if any) covers today's date. Pass a
- * staff JWT to also get `guest_note` back (stripped for anonymous requests
- * server-side, see backend/src/api/booking/controllers/booking.ts) so the
- * edit form can be prefilled.
+ * derived by checking which booking (if any) covers the target date (today
+ * by default, or a date picked via the calendar nav). Cancelled bookings
+ * are excluded so a cancelled-but-not-yet-elapsed period doesn't still show
+ * the room as occupied. Pass a staff JWT to also get `guest_note` back
+ * (stripped for anonymous requests server-side, see
+ * backend/src/api/booking/controllers/booking.ts) so the edit form can be
+ * prefilled.
  */
-export async function getRoomGrid(token?: string | null): Promise<RoomWithStatus[]> {
-  const today = todayISODate();
+export async function getRoomGrid(
+  token?: string | null,
+  date?: string
+): Promise<RoomWithStatus[]> {
+  const targetDate = date ?? todayISODate();
 
   const roomsQuery = new URLSearchParams({
     sort: "position:asc",
@@ -85,8 +92,9 @@ export async function getRoomGrid(token?: string | null): Promise<RoomWithStatus
   const bookingsQuery = new URLSearchParams({
     populate: "room",
     "pagination[limit]": "100",
-    "filters[date_from][$lte]": today,
-    "filters[date_to][$gte]": today,
+    "filters[status][$eq]": "active",
+    "filters[date_from][$lte]": targetDate,
+    "filters[date_to][$gte]": targetDate,
   });
 
   const [roomsRes, bookingsRes] = await Promise.all([

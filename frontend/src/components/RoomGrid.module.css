@@ -236,3 +236,45 @@ button.room:focus-visible {
   opacity: 0.6;
   cursor: default;
 }
+
+.history {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-stone-line);
+}
+
+.history h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1rem;
+  color: var(--color-wood-deep);
+}
+
+.history ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.historyEntry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.85rem;
+}
+
+.historyDates {
+  color: var(--color-ink);
+}
+
+.historyCancelled {
+  color: var(--color-occupied);
+}
+
+.historyNote {
+  color: var(--color-ink-soft);
+}

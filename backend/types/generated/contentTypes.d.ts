@@ -469,6 +469,9 @@ export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     room: Schema.Attribute.Relation<'manyToOne', 'api::room.room'>;
+    status: Schema.Attribute.Enumeration<['active', 'cancelled']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'active'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
